@@ -1,95 +1,10 @@
-name: YOURLS
-description: |
-  [YOURLS](https://yourls.org/) from [yourls](https://hub.docker.com/_/yourls/)
-  ============
- 
-  [YOURLS](https://yourls.org/), Your Own URL Shortener, is a set of PHP scripts that will allow you to run <strong>Y</strong>our <strong>O</strong>wn <strong>URL</strong> <strong>S</strong>hortener. You'll have full control over your data, detailed stats, analytics, plugins, and more. It's free and open-source.  
-
-  ### Parameters
-  
-  * YOURLS Port - Port YOURLS will listen on the host standard is 80
-  * Data Directory - The folder for all data uploaded IE /hostfolder/data
-  * GroupID - see below for explanation
-  * UserID - see below for explanation
-  
-  ### User / Group Identifiers
-  
-  Sometimes when using data volumes permissions issues can arise between the host OS and the container. We avoid this issue by allowing you to specify the user `PUID` and group `PGID`. Ensure the data volume directory on the host is owned by the same user you specify and it will "just work".
-  
-  To find yours use `id user` as below:
-  
-  ```
-    $ id <your logged in user>
-      uid=1001(your logged in user) gid=1001(your logged in user) groups=1001(your logged in user)
-  ```
-  
-  ### Synology
-  
-  For volume mounting on Synology device you are most likely going to be working with folders out of the:
-  * /volume1 directory
-  
-  Folders inside of this folder will be named after the Shared folder name IE if you created a shared folder named "Data" it will be:
-  * /volume1/Data
-  
-  If you are launching multiple containers we reccomend creating a Shared folder called "Config" and using it to mount up the different application configurations IE:
-  * /volume1/Config/YOURLS
-  * /volume1/Config/MariaDB
-  
-  On Synology devices your ids will be:(default initial user created when setting up DSM)
-  * UserID: 1026
-  * GroupID: 100
-
-form:
-  - type: input
-    label: name
-    FormName: Stack Name
-    placeholder: Single word to identify this application IE YOURLS
-    validation: ^[\w\d-\_]+$
-    errormessage: Name must only container letters, numbers, and - or _
-    required: true
-  - type: input
-    label: appport
-    FormName: YOURLS Port
-    placeholder: Port YOURLS will listen on the host standard is 80
-    validation: ^([1-9]|[1-8][0-9]|9[0-9]|[1-8][0-9]{2}|9[0-8][0-9]|99[0-9]|[1-8][0-9]{3}|9[0-8][0-9]{2}|99[0-8][0-9]|999[0-9]|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])$
-    errormessage: Values must be in a valid port range 1-65535
-    required: true
-  - type: input
-    label: datafolder
-    FormName: Data Directory
-    placeholder: The folder for all data uploaded IE /hostfolder/data
-    required: true
-  - type: input
-    label: uid
-    FormName: User ID
-    placeholder: UserID to run YOURLS as IE 1025
-    validation: ^([1-9]|[1-8][0-9]|9[0-9]|[1-8][0-9]{2}|9[0-8][0-9]|99[0-9]|[1-8][0-9]{3}|9[0-8][0-9]{2}|99[0-8][0-9]|999[0-9]|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])$
-    errormessage: Values must be in the number range 1-65535
-    required: true
-  - type: input
-    label: gid
-    FormName: Group ID
-    placeholder: GroupID to run YOURLS as IE 100
-    validation: ^([1-9]|[1-8][0-9]|9[0-9]|[1-8][0-9]{2}|9[0-8][0-9]|99[0-9]|[1-8][0-9]{3}|9[0-8][0-9]{2}|99[0-8][0-9]|999[0-9]|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])$
-    errormessage: Values must be in the number range 1-65535
-    required: true
-
-compose: |
-  version: "3"
-  services:
-    {{ name }}:
-      image: yourls:fpm-alpine
-      container_name: {{ name }}_YOURLS
-      environment:
-        - PUID={{ uid }}
-        - PGID={{ gid }}
-      network_mode: bridge
-      labels:
-        - "stackname={{ stackname }}"
-        - "stacktype={{ stacktype }}"
-        - "stackurl={{ stackurl }}"
-        - "appport={{ appport }}"
-      volumes:
-        - "{{ datafolder }}:/data"
-      ports:
-        - "{{ appport }}:80"
+version: "3"
+services:
+  yourls:
+    image: yourls:fpm-alpine
+    container_name: yourls_YOURLS
+    restart: unless-stopped
+    volumes:
+      - /files/containers/yourls/data/:/data
+    ports:
+      - 8003:80

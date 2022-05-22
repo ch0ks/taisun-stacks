@@ -1,0 +1,32 @@
+version: '3.5'
+services:
+  nginx:
+    image: tobybatch/nginx-fpm-reverse-proxy
+    restart: unless-stopped
+    env_file:
+      - stack.env
+    ports:
+      - 8003:80
+    volumes:
+      - public:/opt/kimai/public:ro
+    depends_on:
+      - kimai
+    healthcheck:
+      test:  wget --spider http://nginx/health || exit 1
+      interval: 20s
+      start_period: 10s
+      timeout: 10s
+      retries: 3
+
+  # Do not change the name of this service since it is referenced in the nginx configuration
+  kimai: # This is the latest FPM image of kimai
+    image: kimai/kimai2:fpm
+    restart: unless-stopped
+    env_file:
+      - stack.env
+
+    volumes:
+      - public:/opt/kimai/public:rw
+
+volumes:
+    public:

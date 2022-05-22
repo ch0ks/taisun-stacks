@@ -1,31 +1,17 @@
-name: Calibre-Web
-description: |
-  Calibre-Web from [LinuxServer.io](https://linuxserver.io/) [linuxserver/calibre-web](https://hub.docker.com/r/linuxserver/calibre-web/)
-  ============
-
-  [Calibre-Web](https://github.com/janeczku/calibre-web) is a web app providing a clean interface for browsing, reading and downloading eBooks using an existing Calibre database.
-
-
-compose: |
-  version: "3"
-  services:
-    calibreweb:
-      image: linuxserver/calibre-web:latest
-      container_name: calibreweb
-      environment:
-        - PUID=116
-        - PGID=123
-        - TZ=US/Pacific
-      network_mode: bridge
-      labels:
-        - "stackname=calibreweb"
-        - "stacktype=community"
-        - "stackurl=https://stacks.taisun.io/templates/5e49f7c2-9c44-44da-a189-b9026472b53f.yml"
-        - "appport=8083"
-      volumes:
-        - "/files/containers/calibreweb/config:/config"
-        - "/files/containers/calibreweb/download:/download"
-        - "/files/containers/calibreweb/books:/books"
-
-      ports:
-        - "8083:8083"
+version: 3
+services:
+  calibreweb:
+    image: linuxserver/calibre-web:latest
+    container_name: calibreweb
+    restart: unless-stopped
+    env_file:
+      - stack.env
+    network_mode: calibreweb-default
+    labels:
+      - appport=8083
+    volumes:
+      - /files/containers/calibreweb/config:/config
+      - /files/containers/calibreweb/download:/download
+      - /files/containers/calibreweb/books:/books
+    ports:
+      - 8083:8083

@@ -1,0 +1,24 @@
+version: "2.1"
+services:
+  focalboardrozul:
+    image: mattermost/focalboard
+    container_name: focalboardrozul-app
+    restart: unless-stopped
+    env_file:
+      - stack.env
+    depends_on:
+      - focalboard-db
+    volumes:
+      - /files/containers/focalboardrozul/config/config.json:/opt/focalboard/config.json:ro
+      - /files/containers/focalboardrozul/data:/data:rw
+    ports:
+      - 8001:8000
+
+  focalboard-db:
+    image: postgres:latest
+    container_name: focalboardrozul-postgres
+    restart: unless-stopped
+    env_file:
+      - stack.env
+    volumes:
+      - /files/containers/focalboardrozul/data/postgresql:/var/lib/postgresql/data:rw
