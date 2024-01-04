@@ -1,0 +1,16 @@
+version: "3.3"
+services:
+  mariadb:
+    image: lscr.io/linuxserver/mariadb:latest
+    container_name: mariadb
+    env_file:
+      - stack.env
+    volumes:
+      - /files/containers/mariadb/config:/config
+    networks:
+      - databases
+    restart: unless-stopped
+
+networks:
+  databases:
+    driver: bridge
