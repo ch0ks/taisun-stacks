@@ -1,4 +1,4 @@
-version: 3
+version: '3'
 services:
   calibreweb:
     image: linuxserver/calibre-web:latest
@@ -6,7 +6,6 @@ services:
     restart: unless-stopped
     env_file:
       - stack.env
-    network_mode: calibreweb-default
     labels:
       - appport=8083
     volumes:

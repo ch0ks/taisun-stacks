@@ -22,8 +22,8 @@ mkdir -p "$output_dir"
 # Iterate through .env files in the input directory
 for file in "$input_dir"/*.env; do
   if [ -f "$file" ]; then
-    # Get the filename without the path and extension
-    filename=$(basename "$file" .env)
+    # Get the filename without the path
+    filename=$(basename "$file")
 
     # Check if an encrypted file with the same name already exists
     if [ -f "$output_dir/$filename.asc" ]; then

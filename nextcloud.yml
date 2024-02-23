@@ -1,0 +1,22 @@
+version: "3"
+services:
+  nextcloud:
+    image: linuxserver/nextcloud
+    container_name: nextcloud
+    env_file:
+      - stack.env
+    volumes:
+      - /files/containers/nextcloud/config:/config
+      - /files/containers/nextcloud/data:/data
+    ports:
+      - ${PORT}:443
+    restart: unless-stopped
+    networks:
+      - databases
+      - webapps
+
+networks:
+  databases:
+    external: true
+  webapps:
+    external: true
