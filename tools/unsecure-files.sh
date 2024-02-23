@@ -1,4 +1,10 @@
-#!/usr/bin/env bash
+###############################################################################
+# Script Name: unsecure_files.sh
+# Description: Decrypts files in the ../secured-env directory.
+# Author: Adrian Puente Z. <apuente@hackarandas.com>
+# Date: January 4, 2024
+# Usage: ./unsecure_files.sh
+###############################################################################
 
 # Define the expected directory name
 expected_directory="tools"
